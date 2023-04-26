@@ -22,18 +22,28 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
         self._name = "autogpt-twitter"
         self._version = "0.1.0"
         self._description = "Twitter API integrations using Tweepy."
-        self.twitter_bearer_token = os.getenv("TW_BEARER_TOKEN")
+        self.twitter_consumer_key = os.getenv("TW_CONSUMER_KEY")
+        self.twitter_consumer_secret = os.getenv("TW_CONSUMER_SECRET")
+        self.twitter_access_token = os.getenv("TW_ACCESS_TOKEN")
+        self.twitter_access_token_secret = os.getenv("TW_ACCESS_TOKEN_SECRET")
         self.tweet_id = []
         self.tweets = []
 
         self.api = None
 
         if (
-            self.twitter_bearer_token
+            self.twitter_consumer_key
+            and self.twitter_consumer_secret
+            and self.twitter_access_token
+            and self.twitter_access_token_secret
         ) is not None:
             # Authenticating to twitter
-            self.auth = tweepy.OAuth2BearerHandler(self.twitter_bearer_token)
-            self.api = tweepy.API(self.auth)
+            self.api = tweepy.Client(
+                consumer_key=self.twitter_consumer_key,
+                consumer_secret=self.twitter_consumer_secret,
+                access_token=self.twitter_access_token,
+                token_secret=self.twitter_access_token_secret,
+            )
         else:
             print("Twitter credentials not found in .env file.")
 
@@ -65,7 +75,7 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
     def on_planning(
         self, prompt: PromptGenerator, messages: List[str]
     ) -> Optional[str]:
-        """This method is called before the planning chat completeion is done.
+        """This method is called before the planning chat completion is done.
         Args:
             prompt (PromptGenerator): The prompt generator.
             messages (List[str]): The list of messages.
@@ -80,7 +90,7 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
         return False
 
     def post_planning(self, response: str) -> str:
-        """This method is called after the planning chat completeion is done.
+        """This method is called after the planning chat completion is done.
         Args:
             response (str): The response.
         Returns:
@@ -218,7 +228,6 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
         """
         if self.api:
             from .twitter import (
-                get_mentions,
                 post_reply,
                 post_tweet,
                 search_twitter_user,
@@ -233,7 +242,6 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
                 {"tweet_text": "<tweet_text>", "tweet_id": "<tweet_id>"},
                 post_reply,
             )
-            prompt.add_command("get_mentions", "Get Twitter Mentions", {}, get_mentions)
             prompt.add_command(
                 "search_twitter_user",
                 "Search Twitter",

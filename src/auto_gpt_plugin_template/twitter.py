@@ -17,7 +17,7 @@ def post_tweet(tweet_text: str) -> str:
         str: The tweet that was posted.
     """
 
-    _tweetID = plugin.api.update_status(status=tweet_text)
+    _tweetID = plugin.api.create_tweet(text=tweet_text, user_auth=True)
 
     return f"Success! Tweet: {_tweetID.text}"
 
@@ -33,35 +33,17 @@ def post_reply(tweet_text: str, tweet_id: int) -> str:
         str: The tweet that was posted.
     """
 
-    replyID = plugin.api.update_status(
-        status=tweet_text, in_reply_to_status_id=tweet_id,
-        auto_populate_reply_metadata=True
+    replyID = plugin.api.create_tweet(
+        text=tweet_text,
+        in_reply_to_tweet_id=tweet_id,
+        user_auth=True,
     )
 
     return f"Success! Tweet: {replyID.text}"
 
 
-def get_mentions() -> str | None:
-    """Gets the most recent mention.
-
-    Args:
-        api (tweepy.API): The tweepy API object.
-
-    Returns:
-        str | None: The most recent mention.
-    """
-
-    _tweets = plugin.api.mentions_timeline(tweet_mode="extended")
-
-    for tweet in _tweets:
-        return (
-            f"@{tweet.user.screen_name} Replied: {tweet.full_text}"
-            f" Tweet ID: {tweet.id}"
-        )  # Returns most recent mention
-
-
 def search_twitter_user(target_user: str, number_of_tweets: int) -> str:
-    """Searches a user's tweets given a number of items to retrive and
+    """Searches a user's tweets given a number of items to retrieve and
       returns a dataframe.
 
     Args:
@@ -72,18 +54,18 @@ def search_twitter_user(target_user: str, number_of_tweets: int) -> str:
     Returns:
         str: The dataframe containing the tweets.
     """
+    columns = ["created_at", "author_id", "id", "text"]
 
-    tweets = tweepy.Cursor(
-        plugin.api.user_timeline, screen_name=target_user, tweet_mode="extended"
-    ).items(number_of_tweets)
+    userResponse = plugin.api.get_user(
+        username=target_user,
+        tweet_fields=columns,
+        user_auth=True,
+    )
 
-    columns = ["Time", "User", "ID", "Tweet"]
     data = []
 
-    for tweet in tweets:
-        data.append(
-            [tweet.created_at, tweet.user.screen_name, tweet.id, tweet.full_text]
-        )
+    for tweet in userResponse.includes.tweets:
+        data.append([tweet.created_at, userResponse.data.id, tweet.id, tweet.text])
 
     df = str(pd.DataFrame(data, columns=columns))
 
