@@ -232,7 +232,6 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
                 post_tweet,
                 search_twitter_user,
             )
-
             prompt.add_command(
                 "post_tweet", "Post Tweet", {"tweet_text": "<tweet_text>"}, post_tweet
             )

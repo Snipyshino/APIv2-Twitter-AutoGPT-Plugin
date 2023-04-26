@@ -58,13 +58,18 @@ def search_twitter_user(target_user: str, number_of_tweets: int) -> str:
 
     userResponse = plugin.api.get_user(
         username=target_user,
-        tweet_fields=columns,
         user_auth=True,
+    )
+
+    print("Twitter User Object: ", userResponse)
+
+    tweetsResponse = plugin.api.get_users_tweets(
+        id=userResponse.data.id, max_results=number_of_tweets
     )
 
     data = []
 
-    for tweet in userResponse.includes.tweets:
+    for tweet in tweetsResponse.includes.tweets:
         data.append([tweet.created_at, userResponse.data.id, tweet.id, tweet.text])
 
     df = str(pd.DataFrame(data, columns=columns))
