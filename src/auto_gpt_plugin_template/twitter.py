@@ -69,8 +69,8 @@ def search_twitter_user(target_user: str, number_of_tweets: int) -> str:
 
     data = []
 
-    for tweet in tweetsResponse.includes.tweets:
-        data.append([tweet.created_at, userResponse.data.id, tweet.id, tweet.text])
+    for tweet in tweetsResponse.data:
+        data.append([tweet.created_at, tweet.author_id, tweet.id, tweet.text])
 
     df = str(pd.DataFrame(data, columns=columns))
 
