@@ -64,7 +64,7 @@ def search_twitter_user(target_user: str, number_of_tweets: int) -> str:
     print("Twitter User Object: ", userResponse)
 
     tweetsResponse = plugin.api.get_users_tweets(
-        id=userResponse.data.id, max_results=number_of_tweets
+        id=userResponse.data.id, max_results=number_of_tweets, user_auth=True
     )
 
     data = []
