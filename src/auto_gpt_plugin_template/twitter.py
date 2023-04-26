@@ -11,7 +11,7 @@ def post_tweet(tweet_text: str) -> str:
     """Posts a tweet to twitter.
 
     Args:
-        tweet (str): The tweet to post.
+        tweet_text (str): The tweet to post.
 
     Returns:
         str: The tweet that was posted.
@@ -19,15 +19,15 @@ def post_tweet(tweet_text: str) -> str:
 
     _tweetID = plugin.api.create_tweet(text=tweet_text, user_auth=True)
 
-    return f"Success! Tweet: {_tweetID.text}"
+    return f"Success! Tweet: {_tweetID.data.text}"
 
 
-def post_reply(tweet_text: str, tweet_id: int) -> str:
+def post_reply(tweet_text: str, id: int) -> str:
     """Posts a reply to a tweet.
 
     Args:
-        tweet (str): The tweet to post.
-        tweet_id (int): The ID of the tweet to reply to.
+        tweet_text (str): The tweet to post.
+        id (int): The ID of the tweet to reply to.
 
     Returns:
         str: The tweet that was posted.
@@ -35,12 +35,38 @@ def post_reply(tweet_text: str, tweet_id: int) -> str:
 
     replyID = plugin.api.create_tweet(
         text=tweet_text,
-        in_reply_to_tweet_id=tweet_id,
+        in_reply_to_tweet_id=id,
         user_auth=True,
     )
 
-    return f"Success! Tweet: {replyID.text}"
+    return f"Success! Tweet: {replyID.data.text}"
 
+
+# def get_mentions() -> str | None:
+#     """Gets the most recent mention.
+
+#     Args:
+#         api (tweepy.API): The tweepy API object.
+
+#     Returns:
+#         str | None: The most recent mention.
+#     """
+#     columns = ["created_at", "author_id", "id", "text"]
+
+#     userResponse = plugin.api.get_user(
+#         username=target_user,
+#         user_auth=True,
+#     )
+
+#     print("Twitter User Object: ", userResponse)
+
+#     _tweets = plugin.api.get_users_mentions()
+
+#     for tweet in _tweets:
+#         return (
+#             f"@{tweet.user.screen_name} Replied: {tweet.full_text}"
+#             f" Tweet ID: {tweet.id}"
+#         )  # Returns most recent mention
 
 def search_twitter_user(target_user: str, number_of_tweets: int) -> str:
     """Searches a user's tweets given a number of items to retrieve and

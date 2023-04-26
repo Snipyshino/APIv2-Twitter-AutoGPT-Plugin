@@ -238,7 +238,7 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
             prompt.add_command(
                 "post_reply",
                 "Post Twitter Reply",
-                {"tweet_text": "<tweet_text>", "tweet_id": "<tweet_id>"},
+                {"tweet_text": "<tweet_text>", "id": "<id>"},
                 post_reply,
             )
             prompt.add_command(
