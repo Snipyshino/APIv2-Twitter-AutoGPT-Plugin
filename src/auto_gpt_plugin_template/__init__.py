@@ -42,7 +42,7 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
                 consumer_key=self.twitter_consumer_key,
                 consumer_secret=self.twitter_consumer_secret,
                 access_token=self.twitter_access_token,
-                token_secret=self.twitter_access_token_secret,
+                access_token_secret=self.twitter_access_token_secret,
             )
         else:
             print("Twitter credentials not found in .env file.")
