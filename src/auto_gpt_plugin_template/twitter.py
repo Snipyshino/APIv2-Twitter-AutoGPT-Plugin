@@ -68,13 +68,12 @@ def post_reply(tweet_text: str, id: int) -> str:
 #             f" Tweet ID: {tweet.id}"
 #         )  # Returns most recent mention
 
-def search_twitter_user(target_user: str, number_of_tweets: int) -> str:
+def search_twitter_user(target_user: str) -> str:
     """Searches a user's tweets given a number of items to retrieve and
       returns a dataframe.
 
     Args:
         target_user (str): The user to search.
-        num_of_items (int): The number of items to retrieve.
         api (tweepy.API): The tweepy API object.
 
     Returns:
@@ -90,7 +89,10 @@ def search_twitter_user(target_user: str, number_of_tweets: int) -> str:
     print("Twitter User Object: ", userResponse)
 
     tweetsResponse = plugin.api.get_users_tweets(
-        id=userResponse.data.id, max_results=number_of_tweets, user_auth=True
+        id=userResponse.data.id,
+        max_results=10,
+        user_auth=True,
+        tweet_fields=columns
     )
 
     data = []

@@ -246,7 +246,6 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
                 "Search Twitter",
                 {
                     "target_user": "<target_user>",
-                    "number_of_tweets": "<number_of_tweets",
                 },
                 search_twitter_user,
             )
